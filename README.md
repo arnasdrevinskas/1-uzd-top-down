@@ -1,3 +1,5 @@
+https://leetcode.com/problems/first-bad-version/
+
 Problema - Surasti blogąją versija ir atvaizduoti jį ekrane.
 
 Analizė
