@@ -1,0 +1,253 @@
+#include <iostream>
+
+#include <fstream>
+
+#include <string>
+
+#include <cstring>
+
+#include <cstdlib>
+
+#include <stdio.h>
+
+#include <conio.h>
+
+using namespace std;
+
+class file {
+  public:
+    file() {
+      ofstream fout;
+      fout.open("text.txt");
+      fout << "text";
+      fout.close();
+    }
+};
+
+class profit {
+  public:
+    double profits;
+  void show() {
+    ifstream x("profits.txt");
+    if (!x)
+      cout << "profits = 1";
+    else {
+      x >> profits;
+      cout << "All profit: " << profits << endl;
+      x.close();
+    }
+  }
+};
+
+class product: public virtual profit {
+  public: int quantity;
+  char name[12];
+  char id[12];
+  double pcost;
+  double psell;
+  double cost;
+  double sell;
+  void cal() {
+    cost = pcost * quantity;
+    sell = psell * quantity;
+    profits = profits + (sell - cost) * 365;
+  }
+  void file();
+  void get();
+};
+
+void product::get() {
+  int s;
+  cout << "number of products produced?";
+  cin >> s;
+  for (int i = 0; i < s; i++) {
+    cout << "input product name:";
+    cin >> name;
+    cout << "input product id: ";
+    cin >> id;
+    cout << "ninput cost price of product:";
+    cin >> pcost;
+    cout << "input selling price of product:";
+    cin >> psell;
+    cout << "total product quantity:";
+    cin >> quantity;
+    cal();
+    file();
+  }
+}
+
+void product::file() {
+  char file[20];
+  strcpy(file, id);
+  strcat(file, ".txt");
+  ofstream f(file);
+  f << "product name: " << name << "product id: " << id << "cost price of product: " << pcost << "selling price of product: " << psell << "quantity: " << quantity << "total cost: " << cost << "sell: " << sell;
+  f.close();
+}
+
+class staff: public virtual profit {
+  protected: double salary;
+  int staffquant;
+  char post[12];
+  char id[12];
+  void calc() {
+    profits = (profits - salary * staffquant) * 12;
+  }
+  void addstaff();
+  void staffcounts();
+
+};
+
+void staff::addstaff() {
+  cout << "What will you pay your staff ?" << endl;
+  cin >> salary;
+  cout << "How many staff you want to hire ?" << endl;
+  cin >> staffquant;
+  cout << "Make an id for the staff" << endl;
+  cin >> id;
+
+  for (int i = 0; i < staffquant; i++) {
+    cout << "Input staff name;" << endl;
+    cin >> post;
+  }
+  void staffcounts();
+
+};
+
+void staff::staffcounts()
+
+{
+  char file[12];
+  strcpy(file, id);
+  strcat(file, ".txt");
+  ofstream f(file);
+  cout << " Number of staff " << staffquant << "staff salary" << salary << "staff name" << post;
+  f.close();
+}
+
+class amount: public staff, public product {
+
+  public: void add();
+  void update_id();
+
+};
+
+void amount::add() {
+  int ch;
+  char name[12];
+  while (1) {
+    cout << endl << "1.Add product" << endl;
+    cout << "2.Add staff" << endl;
+    cout << "3.Exit" << endl;
+    cout << "Enter choice\n";
+    cin >> ch;
+    if (ch == 1) {
+      get();
+      ofstream x("profits.txt");
+      x << profits;
+      x.close();
+    } else if (ch == 2) {
+      addstaff();
+      ofstream x("profits.txt");
+      x << profits;
+      x.close();
+    } else if (ch == 3)
+      break;
+    else
+      cout << "Invaid Option";
+  }
+}
+
+
+
+void admin() {
+  while (1) {
+    cout << "======================" << endl;
+    cout << "        System        " << endl;
+    cout << "======================" << endl;
+    cout << "1.   Add entries      " << endl;
+    cout << "2.     Profits        " << endl;
+    cout << "3.  Search Product    " << endl;
+    cout << "4. Search Staff Info  " << endl;
+    cout << "5.     Go Back        " << endl;
+    break;
+  }
+  int numb, u;
+  cin >> numb;
+
+  if (numb == 1) {
+    amount a;
+    a.show();
+    a.add();
+  } else if (numb == 2) {
+    amount d;
+    d.show();
+  } else if (numb == 3) {
+    char staffid[20];
+    char d;
+    cout << "INPUT employee ID to search";
+    cin >> staffid;
+    char file[20];
+    strcpy(file, staffid);
+    strcat(file, ".txt");
+    ifstream y(file);
+    if (!y) {
+      cout << "staff ID not found. ";
+    }
+    while (y) {
+      y.get(d);
+      cout << d;
+    }
+    y.close();
+  } else if (numb == 4) {
+    char eid[20];
+    char d;
+    cout << "INPUT employee ID to search";
+    cin >> eid;
+    char file[20];
+    strcpy(file, eid);
+    strcat(file, ".txt");
+    ifstream y(file);
+    if (!y) {
+      cout << "file couldn't be opened. employee ID not found. ";
+    }
+    while (y) {
+      y.get(d);
+      cout << d;
+    }
+
+    y.close();
+  } else if (u == 5) {
+    exit;
+  }
+
+};
+
+int main() {
+  int ch;
+  char pwd[10];
+  while (1) {
+    cout << endl << "======================" << endl;
+    cout << "      Arnas Shop" << endl;
+    cout << "======================" << endl;
+    cout << "1.   Start Shopping   " << endl;
+    cout << "----------------------" << endl;
+    cout << "2.     Exit Shop      " << endl;
+    cout << "----------------------" << endl;
+
+    cin >> ch;
+    switch (ch) {
+    case 1:
+      admin();
+      break;
+    case 2:
+      exit(0);
+      break;
+    default:
+      cout << " :) Invalid number :) ";
+      break;
+
+    }
+  }
+  return 0;
+}
